@@ -1,0 +1,11 @@
+{
+  "name": "playwrighttest",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "",
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.5"
+  },
+  "scripts": {}
+}
