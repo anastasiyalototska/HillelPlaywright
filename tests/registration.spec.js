@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
+import { RegistrationPage } from '../pages/RegistrationPage';
 
 test.describe('User Registration', () => {
   const firstName = faker.person.firstName();
@@ -12,142 +13,138 @@ test.describe('User Registration', () => {
   const shortName = 'A';
   const invalidEmail = 'invalid-email';
 
+  let registrationPage;
+
   test.beforeEach(async ({ page }) => {
-    await page.goto('https://guest:welcome2qauto@qauto.forstudy.space');
-    await page.getByRole('button', { name: 'Sign In' }).click();
-    await page.getByRole('button', { name: 'Registration' }).click();
+    registrationPage = new RegistrationPage(page);
+    await registrationPage.openRegistrationForm();
   });
 
-  test('should register a new user successfully', async ({ page }) => {
-    await page.locator('#signupName').fill(firstName);
-    await page.locator('#signupLastName').fill(lastName);
-    await page.locator('#signupEmail').fill(email);
-    await page.locator('#signupPassword').fill(password);
-    await page.locator('#signupRepeatPassword').fill(password);
-    await page.getByRole('button', { name: 'Register' }).click();
-    await expect(page.locator('text=Log out')).toBeVisible();
-
+  test('should register a new user successfully', async () => {
+    await registrationPage.fillRegistrationForm({
+      firstName,
+      lastName,
+      email,
+      password,
+      repeatPassword: password,
+    });
+    await registrationPage.registerButton.click();
+    await expect(registrationPage.page.locator('text=Log out')).toBeVisible();
   });
 
-  test('should display "Name required" when the name field is left empty', async ({ page }) => {
-    await page.locator('#signupName').focus();
-    await page.locator('#signupName').blur();
-    await expect(page.locator('.invalid-feedback p', { hasText: 'Name required' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Register' })).toBeDisabled();
+  test('should display "Name required" when the name field is left empty', async () => {
+    await registrationPage.firstNameInput.focus();
+    await registrationPage.firstNameInput.blur();
+    await expect(registrationPage.page.locator('.invalid-feedback p', { hasText: 'Name required' })).toBeVisible();
+    await expect(registrationPage.registerButton).toBeDisabled();
   });
 
-  test('should show error for empty last name', async ({ page }) => {
-    await page.locator('#signupLastName').focus();
-    await page.locator('#signupLastName').blur();
-    await expect(page.locator('.invalid-feedback p', { hasText: 'Last name required' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Register' })).toBeDisabled();
+  test('should show error for empty last name', async () => {
+    await registrationPage.lastNameInput.focus();
+    await registrationPage.lastNameInput.blur();
+    await expect(registrationPage.page.locator('.invalid-feedback p', { hasText: 'Last name required' })).toBeVisible();
+    await expect(registrationPage.registerButton).toBeDisabled();
   });
 
-  test('should show error for empty email', async ({ page }) => {
-    await page.locator('#signupEmail').focus();
-    await page.locator('#signupEmail').blur();
-    await expect(page.locator('.invalid-feedback p', { hasText: 'Email required' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Register' })).toBeDisabled();
+  test('should show error for empty email', async () => {
+    await registrationPage.emailInput.focus();
+    await registrationPage.emailInput.blur();
+    await expect(registrationPage.page.locator('.invalid-feedback p', { hasText: 'Email required' })).toBeVisible();
+    await expect(registrationPage.registerButton).toBeDisabled();
   });
 
-  test('should show error for invalid email format', async ({ page }) => {
-    await page.locator('#signupEmail').fill(invalidEmail);
-    await page.locator('#signupEmail').blur();
-    await expect(page.locator('.invalid-feedback p', { hasText: 'Email is incorrect' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Register' })).toBeDisabled();
+  test('should show error for invalid email format', async () => {
+    await registrationPage.emailInput.fill(invalidEmail);
+    await registrationPage.emailInput.blur();
+    await expect(registrationPage.page.locator('.invalid-feedback p', { hasText: 'Email is incorrect' })).toBeVisible();
+    await expect(registrationPage.registerButton).toBeDisabled();
   });
 
-  test('should show error for empty password', async ({ page }) => {
-    await page.locator('#signupPassword').focus();
-    await page.locator('#signupPassword').blur();
-    await expect(page.locator('.invalid-feedback p', { hasText: 'Password required' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Register' })).toBeDisabled();
+  test('should show error for empty password', async () => {
+    await registrationPage.passwordInput.focus();
+    await registrationPage.passwordInput.blur();
+    await expect(registrationPage.page.locator('.invalid-feedback p', { hasText: 'Password required' })).toBeVisible();
+    await expect(registrationPage.registerButton).toBeDisabled();
   });
 
-  test('should show error for password too short', async ({ page }) => {
-    await page.locator('#signupPassword').fill(shortPassword);
-    await page.locator('#signupPassword').blur();
-    await expect(
-      page.locator('.invalid-feedback p', {
-        hasText:
-          'Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter',
-      })
-    ).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Register' })).toBeDisabled();
+  test('should show error for password too short', async () => {
+    await registrationPage.passwordInput.fill(shortPassword);
+    await registrationPage.passwordInput.blur();
+    await expect(registrationPage.page.locator('.invalid-feedback p', {
+      hasText: 'Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter'
+    })).toBeVisible();
+    await expect(registrationPage.registerButton).toBeDisabled();
   });
 
-  test('should show error for password missing required character types', async ({ page }) => {
-    await page.locator('#signupPassword').fill('password');
-    await page.locator('#signupPassword').blur();
-    await expect(
-      page.locator('.invalid-feedback p', {
-        hasText:
-          'Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter',
-      })
-    ).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Register' })).toBeDisabled();
+  test('should show error for password missing required character types', async () => {
+    await registrationPage.passwordInput.fill('password');
+    await registrationPage.passwordInput.blur();
+    await expect(registrationPage.page.locator('.invalid-feedback p', {
+      hasText: 'Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter'
+    })).toBeVisible();
+    await expect(registrationPage.registerButton).toBeDisabled();
   });
 
-  test('should show error for empty re-enter password', async ({ page }) => {
-    await page.locator('#signupRepeatPassword').focus();
-    await page.locator('#signupRepeatPassword').blur();
-    await expect(page.locator('.invalid-feedback p', { hasText: 'Re-enter password required' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Register' })).toBeDisabled();
+  test('should show error for empty re-enter password', async () => {
+    await registrationPage.repeatPasswordInput.focus();
+    await registrationPage.repeatPasswordInput.blur();
+    await expect(registrationPage.page.locator('.invalid-feedback p', { hasText: 'Re-enter password required' })).toBeVisible();
+    await expect(registrationPage.registerButton).toBeDisabled();
   });
 
-  test('should show error if passwords do not match', async ({ page }) => {
-    await page.locator('#signupName').fill(firstName);
-    await page.locator('#signupLastName').fill(lastName);
-    await page.locator('#signupEmail').fill(email);
-    await page.locator('#signupPassword').fill(password);
-    await page.locator('#signupRepeatPassword').fill(mismatchedPassword);
-    await page.locator('#signupRepeatPassword').blur();
-    await expect(page.locator('.invalid-feedback p', { hasText: 'Passwords do not match' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Register' })).toBeDisabled();
+  test('should show error if passwords do not match', async () => {
+    await registrationPage.fillRegistrationForm({
+      firstName,
+      lastName,
+      email,
+      password,
+      repeatPassword: mismatchedPassword,
+    });
+    await registrationPage.repeatPasswordInput.blur();
+    await expect(registrationPage.page.locator('.invalid-feedback p', { hasText: 'Passwords do not match' })).toBeVisible();
+    await expect(registrationPage.registerButton).toBeDisabled();
   });
 
-  test('should show error for name too short', async ({ page }) => {
-    await page.locator('#signupName').fill(shortName);
-    await page.locator('#signupName').blur();
-    await expect(
-      page.locator('.invalid-feedback p', {
-        hasText: 'Name has to be from 2 to 20 characters long',
-      })
-    ).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Register' })).toBeDisabled();
+  test('should show error for name too short', async () => {
+    await registrationPage.firstNameInput.fill(shortName);
+    await registrationPage.firstNameInput.blur();
+    await expect(registrationPage.page.locator('.invalid-feedback p', {
+      hasText: 'Name has to be from 2 to 20 characters long',
+    })).toBeVisible();
+    await expect(registrationPage.registerButton).toBeDisabled();
   });
 
-  test('should show error for name too long', async ({ page }) => {
-    await page.locator('#signupName').fill(longName);
-    await page.locator('#signupName').blur();
-    await expect(
-      page.locator('.invalid-feedback p', {
-        hasText: 'Name has to be from 2 to 20 characters long',
-      })
-    ).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Register' })).toBeDisabled();
+  test('should show error for name too long', async () => {
+    await registrationPage.firstNameInput.fill(longName);
+    await registrationPage.firstNameInput.blur();
+    await expect(registrationPage.page.locator('.invalid-feedback p', {
+      hasText: 'Name has to be from 2 to 20 characters long',
+    })).toBeVisible();
+    await expect(registrationPage.registerButton).toBeDisabled();
   });
 
-  test('should trim extra whitespace in first name', async ({ page }) => {
+  test('should trim extra whitespace in first name', async () => {
     const nameWithWhitespace = '   John   ';
-    await page.locator('#signupName').fill(nameWithWhitespace);
-    await page.locator('#signupName').blur();
-    await expect(page.locator('#signupName')).toHaveValue(nameWithWhitespace.trim());
+    await registrationPage.firstNameInput.fill(nameWithWhitespace);
+    await registrationPage.firstNameInput.blur();
+    await expect(registrationPage.firstNameInput).toHaveValue(nameWithWhitespace.trim());
   });
 
-  test('should trim extra whitespace in last name', async ({ page }) => {
+  test('should trim extra whitespace in last name', async () => {
     const lastNameWithWhitespace = '   Doe   ';
-    await page.locator('#signupLastName').fill(lastNameWithWhitespace);
-    await page.locator('#signupLastName').blur();
-    await expect(page.locator('#signupLastName')).toHaveValue(lastNameWithWhitespace.trim());
+    await registrationPage.lastNameInput.fill(lastNameWithWhitespace);
+    await registrationPage.lastNameInput.blur();
+    await expect(registrationPage.lastNameInput).toHaveValue(lastNameWithWhitespace.trim());
   });
 
-  test('should enable Register button when form is valid', async ({ page }) => {
-    await page.locator('#signupName').fill(firstName);
-    await page.locator('#signupLastName').fill(lastName);
-    await page.locator('#signupEmail').fill(email);
-    await page.locator('#signupPassword').fill(password);
-    await page.locator('#signupRepeatPassword').fill(password);
-    await expect(page.getByRole('button', { name: 'Register' })).toBeEnabled();
+  test('should enable Register button when form is valid', async () => {
+    await registrationPage.fillRegistrationForm({
+      firstName,
+      lastName,
+      email,
+      password,
+      repeatPassword: password,
+    });
+    await expect(registrationPage.registerButton).toBeEnabled();
   });
 });
