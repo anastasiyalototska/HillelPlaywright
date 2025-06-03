@@ -31,6 +31,7 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+
   },
 
   /* Configure projects for major browsers */
@@ -38,14 +39,15 @@ export default defineConfig({
 
     {
       name: 'setup',
-      testMatch: /.*\.setup\.ts/,
+      testMatch: /.*\.setup\.js/,
     },
 
     {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'playwright/.auth/user.json',
+        storageState: 'tests/playwright/.auth/user.json',
+        
       },
       dependencies: ['setup'],
     },

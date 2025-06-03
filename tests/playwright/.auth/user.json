@@ -2,7 +2,7 @@
   "cookies": [
     {
       "name": "YSC",
-      "value": "4LZvqmNeFqw",
+      "value": "zozGcHWAZdo",
       "domain": ".youtube.com",
       "path": "/",
       "expires": -1,
@@ -11,41 +11,41 @@
       "sameSite": "None"
     },
     {
-      "name": "__Secure-ROLLOUT_TOKEN",
-      "value": "CLzToYH4mJn8jwEQhaKiy6S_jQMYhaKiy6S_jQM%3D",
-      "domain": ".youtube.com",
-      "path": "/",
-      "expires": 1763750949.958595,
-      "httpOnly": true,
-      "secure": true,
-      "sameSite": "None"
-    },
-    {
       "name": "VISITOR_INFO1_LIVE",
-      "value": "DuptMXd5of0",
+      "value": "xbunRS_Qolc",
       "domain": ".youtube.com",
       "path": "/",
-      "expires": 1763750949.958638,
+      "expires": 1764517992.677139,
       "httpOnly": true,
       "secure": true,
       "sameSite": "None"
     },
     {
       "name": "VISITOR_PRIVACY_METADATA",
-      "value": "CgJOTBIhEh0SGwsMDg8QERITFBUWFxgZGhscHR4fICEiIyQlJiBQ",
+      "value": "CgJOTBIhEh0SGwsMDg8QERITFBUWFxgZGhscHR4fICEiIyQlJiAb",
       "domain": ".youtube.com",
       "path": "/",
-      "expires": 1763750949.958655,
+      "expires": 1764517992.677186,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "__Secure-ROLLOUT_TOKEN",
+      "value": "CNjc2v-6jPjyWxDckd-FztWNAxjckd-FztWNAw%3D%3D",
+      "domain": ".youtube.com",
+      "path": "/",
+      "expires": 1764517992.677223,
       "httpOnly": true,
       "secure": true,
       "sameSite": "None"
     },
     {
       "name": "sid",
-      "value": "s%3AJ9LQGHVlslxavvUrRbWbYNKilATO4Kb1.grPAHT%2BCSRwlwcUJfvCPkY57Cc7Vqqf%2F%2BtwqiMCLonM",
+      "value": "s%3AEW2OEDVobbA4lrAgE0BHnQ0Jq4yVbe1Z.TzYukedS9LHrLA6XocpLWmmUaapO1hSpXSZ9vV30mLA",
       "domain": ".forstudy.space",
       "path": "/",
-      "expires": 1748285351.309508,
+      "expires": 1749052394.170585,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
@@ -57,7 +57,7 @@
       "localStorage": [
         {
           "name": "ytidb::LAST_RESULT_ENTRY_KEY",
-          "value": "{\"data\":{\"hasSucceededOnce\":true},\"expiration\":1750790950906,\"creation\":1748198950906}"
+          "value": "{\"data\":{\"hasSucceededOnce\":true},\"expiration\":1751557993542,\"creation\":1748965993542}"
         }
       ]
     }
